@@ -1,29 +1,62 @@
+<!--
+ * @Description: 应用主页面
+ * @Author: LiuHuaifu
+ * @Date: 2019-08-03 07:35:24
+ * @LastEditTime: 2019-08-15 10:48:39
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="route-wrapper">
+      <router-view></router-view>
     </div>
-    <router-view/>
   </div>
 </template>
+<script>
+export default {};
+</script>
 
 <style lang="less">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
 }
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+:root,
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 16px; /*px*/
+  font-family: "华文楷体", "宋体", "SimSum", "Sans-serif ";
+}
+
+input {
+  border: none;
+  outline: none;
+}
+#app {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-image: url(./assets/bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  .route-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+}
+.wait-print {
+  display: none;
+}
+@media print {
+  .noprint {
+    display: none;
+  }
+  .wait-print {
+    display: block;
   }
 }
 </style>
