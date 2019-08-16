@@ -2,7 +2,7 @@
  * @Description: 项目主入口文件
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-15 10:37:34
+ * @LastEditTime: 2019-08-15 11:07:35
  * @LastEditors: Please set LastEditors
  */
 import Vue from 'vue'
@@ -11,7 +11,10 @@ import router from './router'
 import store from './store'
 import axios from 'axios';
 import echarts from 'echarts';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import comMethods from './utils/comMethods';
+
 // import "lib-flexible";
 
 // axios.defaults.withCredentials = true; //每次请求，无论是否跨域，都带上cookie信息
@@ -20,6 +23,8 @@ Vue.prototype.comMethods = comMethods;
 Vue.prototype.$echarts = echarts;
 
 Vue.config.productionTip = false;
+
+Vue.use(ElementUI);
 
 //配置全局路由守卫
 router.beforeEach((to, from, next) => {

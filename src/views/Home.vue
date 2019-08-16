@@ -2,22 +2,22 @@
  * @Description: 主页面
  * @Author: LiuHuaiFu
  * @Date: 2019-08-08 08:01:20
- * @LastEditTime: 2019-08-13 22:09:55
+ * @LastEditTime: 2019-08-16 15:42:41
  * @LastEditors: Please set LastEditors
  -->
 <template>
-  <div class="content">
-    <aside-menu></aside-menu>
-    <div id="show-page">
-      <keep-alive exclude="inputPage">
-        <router-view />
-      </keep-alive>
-    </div>
-  </div>
+  <el-container class="container">
+    <el-aside class="aside-menu" width="15%">
+      <aside-menu></aside-menu>
+    </el-aside>
+    <el-main class="content-show">
+      <router-view />
+    </el-main>
+  </el-container>
 </template>
 <script>
 import Vue from "vue";
-import AsideMenu from "@/components/AsideMenu";
+import AsideMenu from "@/components/home/AsideMenu";
 import { setTimeout } from "timers";
 
 Vue.directive("print", (el, binding, vnode) => {
@@ -38,7 +38,7 @@ Vue.directive("print", (el, binding, vnode) => {
       win.print();
       win.close();
       printWindow.remove();
-    }, 400);
+    }, 1000);
 
     let exp = binding.expression;
     vnode.context[exp] && (vnode.context[exp] = false);
@@ -51,20 +51,57 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.content {
-  @aside-width: 13%; // 定义侧边栏宽度
 
+<style>
+.el-header,
+.el-footer {
+  text-align: center;
+  line-height: 60px;
+}
+
+.el-aside {
+  text-align: center;
+  line-height: 200px;
+}
+
+.el-main {
+  text-align: center;
+  line-height: 160px;
+}
+
+body > .el-container {
+  margin-bottom: 40px;
+}
+
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+  line-height: 260px;
+}
+
+.el-container:nth-child(7) .el-aside {
+  line-height: 320px;
+}
+</style>
+
+<style>
+.container {
   width: 100%;
+}
+.container,
+.aside-menu {
   height: 100%;
-  display: flex;
-  overflow: hidden;
+}
 
-  #show-page {
-    flex: 1 1 calc(100% - @aside-width);
-    width: calc(100% - @aside-width);
-    height: 100%;
-    position: relative;
-  }
+.el-main {
+  padding: 0;
+}
+.w100 {
+  width: 100%;
+}
+.h100 {
+  height: 100%;
+}
+::-webkit-scrollbar {
+  display: none;
 }
 </style>

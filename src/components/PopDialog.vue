@@ -2,7 +2,7 @@
  * @Description: 弹出框
  * @Author: LiuHuaifu
  * @Date: 2019-08-06 10:20:17
- * @LastEditTime: 2019-08-13 07:38:41
+ * @LastEditTime: 2019-08-16 11:29:39
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -29,11 +29,11 @@
 </template>
 <script>
 export default {
-  props: ["msg", "tips", "tipsIcon", "type", "state"],
+  props: ["msg", "tips", "tipsIcon", "type", "state", "confirmCbFn"],
   methods: {
     handleModal(val) {
       if (this.type == "confirmModal") {
-        this.$emit("isConfirm", val);
+        this.confirmCbFn(val);
       } else if (this.type == "generalModal") {
         this.$emit("update:showGenModal", val);
       }
@@ -56,6 +56,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 1.2rem;
 
   &.alpha {
     background-color: rgba(0, 0, 0, 0.5);
@@ -76,7 +77,6 @@ export default {
     flex-direction: column;
 
     .head {
-      flex: 1 1 20%;
       height: 20%;
       width: 100%;
       display: flex;
@@ -97,22 +97,20 @@ export default {
       }
     }
     .msg-box {
-      flex: 1 1 65%;
-      height: 65%;
+      height: 50%;
       width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       font-size: 1.1rem;
-      padding-bottom: 1rem;
       box-sizing: border-box;
 
       .msg {
-        padding: 0 1.5rem;
+        width: 100%;
+        height: 100%;
+        padding: 8px 1.5rem;
+        box-sizing: border-box;
       }
     }
     .btn-group {
-      flex: 1 1 30%;
+      // flex: 1 1 30%;
       height: 30%;
       width: 100%;
       display: flex;

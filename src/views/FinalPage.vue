@@ -2,37 +2,46 @@
  * @Description: 最后统计的账单页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:27:13
- * @LastEditTime: 2019-08-11 16:31:13
+ * @LastEditTime: 2019-08-16 15:29:05
  * @LastEditors: Please set LastEditors
  -->
 <template>
-  <div class="container" v-print="isPrint">
-    <div class="header">
-      <def-button class="save-data noprint" @click.native="clickPrint" toggle-class="mousedown">
-        <template #btn-text>打印</template>
-      </def-button>
-      <div class="head-explain">
-        <span>{{searchYear}}</span>年
-        <span>{{searchMonth}}</span>月份平衡账
-        <span class="vice-title">{{viceTitle}}</span>
+  <el-container class="container" direction="vertical" v-print="isPrint">
+    <el-header class="header">
+      <el-row type="flex" justify="space-between">
+        <el-col :span="6">
+          <div class="print-area noprint w100 h100">
+            <el-button type="primary" size="medium" @click="clickPrint">打印</el-button>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="head-explain w100 h100">
+            <span>{{searchYear}}</span>年
+            <span>{{searchMonth}}</span>月份平衡账
+            <span class="vice-title">{{viceTitle}}</span>
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="menu w100 h100 noprint">
+            <div class="trans-view" :class="viewBgClass" @click="ClickTransView"></div>
+          </div>
+        </el-col>
+      </el-row>
+    </el-header>
+    <el-main class="main w100">
+      <div class="table-view w100 h100" v-if="whichView=='table'">
+        <final-table :headConfig="headConfig" :bodyConfig="bodyConfig"></final-table>
       </div>
-      <div class="menu noprint">
-        <div class="trans-view" :class="viewBgClass" @click="ClickTransView"></div>
+      <div class="graphics-view w100 h100" v-else-if="whichView=='graphics'">
+        <final-graphics />
       </div>
-    </div>
-    <div class="table-view" v-if="whichView=='table'">
-      <final-table :headConfig="headConfig" :bodyConfig="bodyConfig"></final-table>
-    </div>
-    <div class="graphics-view" v-else-if="whichView=='graphics'">
-      <final-graphics />
-    </div>
-  </div>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
-import defButton from "../components/ButtonDefault";
-import finalTable from "../components/FinalTable";
-import finalGraphics from "../components/FinalGraphics";
+import finalTable from "../components/finalsum-page/FinalTable";
+import finalGraphics from "../components/finalsum-page/FinalGraphics";
 import { mapState, mapGetters } from "vuex";
 export default {
   data() {
@@ -92,7 +101,6 @@ export default {
   },
   components: {
     finalTable,
-    defButton,
     finalGraphics
   },
   methods: {
@@ -112,51 +120,21 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  height: 100%;
-  width: 100%;
-  color: #252525;
-  padding: 0 0.6rem 1rem;
+  padding: 0.5rem;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   font-size: 1.2rem;
 
   .header {
-    width: 100%;
-    height: 10%;
-    flex: 1 1 10%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+    line-height: 60px; /*no*/
+    padding: 0 8px; /*no*/
+    font-size: 1.8rem;
+    font-weight: 600;
 
-    .save-data {
-      width: 6rem;
-      height: 2rem;
-      line-height: 2rem;
-      margin: auto 0;
-      position: absolute;
-      left: 2rem;
-      top: 0;
-      bottom: 0;
-      border: none;
-      outline: none;
-      background-color: #409eff;
-      cursor: pointer;
-      border-radius: 0.3rem;
-      font-size: 1.2rem;
-      color: #fff;
-      font-weight: 600;
-
-      &:hover {
-        background-color: #74b6f8;
-      }
-
-      &.mousedown {
-        background-color: #409eff;
-      }
+    .print-area {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-left: 1rem;
     }
 
     .head-explain {
@@ -167,31 +145,27 @@ export default {
         font-size: 1.5rem;
       }
     }
-
-    .trans-view {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 2rem;
-      margin: auto 0;
-      width: 2rem;
-      height: 2rem;
-      cursor: pointer;
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-    }
-    .table-view-bg {
-      background-image: url(../assets/table-view.png);
-    }
-    .graphics-view-bg {
-      background-image: url(../assets/graphics-view.png);
-    }
   }
 
-  .table-view,
-  .graphics-view {
-    width: 100%;
-    height: 100%;
+  .menu {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 2.5rem;
+    box-sizing: border-box;
+  }
+  .trans-view {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  .table-view-bg {
+    background-image: url(../assets/table-view.png);
+  }
+  .graphics-view-bg {
+    background-image: url(../assets/graphics-view.png);
   }
 }
 </style>

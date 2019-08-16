@@ -2,7 +2,7 @@
  * @Description: 最后账单统计图
  * @Author: LiuHuaifu
  * @Date: 2019-08-11 16:11:37
- * @LastEditTime: 2019-08-12 21:46:38
+ * @LastEditTime: 2019-08-16 10:36:35
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -280,11 +280,16 @@ export default {
 .container {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   .g1,
   .g2,
   .g3 {
-    width: 800px;
+    width: 700px;
     height: 400px;
   }
 }
+
 </style>

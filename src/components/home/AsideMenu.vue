@@ -2,7 +2,7 @@
  * @Description: 侧边栏路由导航菜单
  * @Author: LiuHuaifu
  * @Date: 2019-08-05 07:45:15
- * @LastEditTime: 2019-08-15 10:49:05
+ * @LastEditTime: 2019-08-15 14:23:19
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -54,23 +54,20 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-// @top-height: calc(16px * 4); // 定义顶端高度
+</style>
+
+<style lang="less" scoped>
 @top-height: 4rem;
 @aside-width: 13%; // 定义侧边栏宽度
 
 #aside {
-  flex: 1 1 @aside-width;
-  width: @aside-width;
-  // min-width: calc(16px * 12);
-  min-width: 12rem;
+  width: 100%;
   height: 100%;
   background-color: rgba(255, 165, 0, 0.7);
 
   ul {
     width: 100%;
-    // height: calc(16px * 14);
     height: 14rem;
-    // padding: calc(16px * 2) 0;
     padding: 2rem 0;
     display: flex;
     flex-direction: column;
@@ -79,14 +76,9 @@ export default {
     overflow: hidden;
 
     li {
-      // width: calc(16px * 7.5);
-      // padding: calc(16px * 0.4) calc(16px * 1.5) calc(16px * 0.4) calc(16px * 2);
-      // border-top-left-radius: calc(16px * 0.5);
-      // border-bottom-left-radius: calc(16px * 0.5);
-      // box-shadow: calc(-16px * 0.3) calc(16px * 0.6) calc(16px * 0.6)
-      //     rgba(0, 0, 0, 0.5),
-      //   inset 0px calc(-16px * 0.3) calc(16px * 0.3) 0px rgba(23, 23, 23, 0.8);
       width: 6 * 1.25rem;
+      height: 1.25rem;
+      line-height: 1.25rem;
       padding: 0.4rem 1.5rem 0.4rem 2rem;
       border-top-left-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem;

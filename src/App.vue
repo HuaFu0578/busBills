@@ -2,7 +2,7 @@
  * @Description: 应用主页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-15 10:48:39
+ * @LastEditTime: 2019-08-16 09:25:47
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -27,7 +27,7 @@ export default {};
 body {
   width: 100%;
   height: 100%;
-  font-size: 16px; /*px*/
+  // font-size: 16px; /*px*/
   font-family: "华文楷体", "宋体", "SimSum", "Sans-serif ";
 }
 
@@ -49,14 +49,30 @@ input {
   }
 }
 .wait-print {
-  display: none;
+  display: none !important;
 }
 @media print {
   .noprint {
-    display: none;
+    display: none !important;
   }
   .wait-print {
     display: block;
+  }
+}
+
+:root {
+  font-size: 12px;
+  @media (min-width: 576px) {
+    font-size: 12px;
+  }
+  @media (min-width: 768px) {
+    font-size: 14px;
+  }
+  @media (min-width: 992px) {
+    font-size: 14px;
+  }
+  @media (min-width: 1200px) {
+    font-size: 16px;
   }
 }
 </style>

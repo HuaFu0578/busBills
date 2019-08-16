@@ -2,70 +2,89 @@
  * @Description: 账单输入页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:26:19
- * @LastEditTime: 2019-08-15 10:39:57
+ * @LastEditTime: 2019-08-16 15:25:55
  * @LastEditors: Please set LastEditors
  -->
 <template>
-  <div class="wrapper">
-    <div class="header">
-      <def-button class="save-data" @click.native="clickSave" toggle-class="mousedown">
-        <template #btn-text>保存</template>
-      </def-button>
-      <div class="head-wrap">
-        <drop-select
-          name="input_year"
-          id="input_year"
-          :value-arr="yearRange"
-          :search="searchYear"
-          @searchChange="yearChange"
-        ></drop-select>年
-        <drop-select
-          name="input_month"
-          id="input_month"
-          :value-arr="monthRange"
-          :search="searchMonth"
-          @searchChange="monthChange"
-        ></drop-select>月账单输入
-      </div>
-      <setting-menu
-        :menuItems="menuItems"
-        :showTitle.sync="showTitle"
-        :whichItemShow.sync="whichItemShow"
-        :defaultParams="originData"
-        :paramsCallback="paramsCallback"
+  <el-container direction="vertical" class="container">
+    <el-header class="header">
+      <el-row type="flex" class="row-bg" justify="space-between">
+        <el-col :span="6" class="el-row is-justify-flex-start el-row--flex">
+          <el-col :span="8">
+            <div class="save-area">
+              <el-button type="primary" size="medium" @click="clickSave">保存</el-button>
+            </div>
+          </el-col>
+          <el-col :span="12">
+            <div class="save-area">
+              <el-button type="danger" size="medium" @click="clearAll">清空表格</el-button>
+            </div>
+          </el-col>
+        </el-col>
+        <el-col :span="12">
+          <div class="header-title w100 h100">
+            <drop-select
+              name="input_year"
+              id="input_year"
+              :value-arr="yearRange"
+              :search="searchYear"
+              @searchChange="yearChange"
+            ></drop-select>年
+            <drop-select
+              name="input_month"
+              id="input_month"
+              :value-arr="monthRange"
+              :search="searchMonth"
+              @searchChange="monthChange"
+            ></drop-select>月账单输入
+          </div>
+        </el-col>
+        <el-col :span="6">
+          <div class="setting-menu">
+            <setting-menu
+              :menuItems="menuItems"
+              :showTitle.sync="showTitle"
+              :whichItemShow.sync="whichItemShow"
+              :defaultParams="originData"
+              :paramsCallback="paramsCallback"
+            />
+          </div>
+        </el-col>
+      </el-row>
+    </el-header>
+    <el-main class="main pop-relative">
+      <input-table
+        class="table-area"
+        :sendOriginData="JSON.stringify(originData)"
+        @dealDayBill="dealDayBill"
+        :curMonLength="curMonLength"
+        v-print="isPrint"
+        :isPrint="isPrint"
       />
-    </div>
-    <input-table
-      class="table-area"
-      :sendOriginData="JSON.stringify(originData)"
-      @dealDayBill="dealDayBill"
-      :curMonLength="curMonLength"
-      v-print="isPrint"
-    />
-    <pop-dialog
-      v-if="isCover"
-      type="confirmModal"
-      :msg="modalMsg"
-      :tips="modalTips"
-      :tipsIcon="modalTipsIcon"
-      @isConfirm="isConfirmCallback"
-    />
-    <pop-dialog v-if="isSave" type="msgModal" :state="saveState" :autoHidden.sync="isSave" />
-    <pop-dialog
-      v-if="showGenModal"
-      :showGenModal.sync="showGenModal"
-      type="generalModal"
-      :tips="modalTips"
-      :tipsIcon="modalTipsIcon"
-      :msg="modalMsg"
-    />
-  </div>
+      <pop-dialog
+        v-if="showConfirmModal"
+        type="confirmModal"
+        :msg="modalMsg"
+        :tips="modalTips"
+        :tipsIcon="modalTipsIcon"
+        :confirmCbFn="confirmCbFn"
+      />
+      <pop-dialog v-if="isSave" type="msgModal" :state="saveState" :autoHidden.sync="isSave" />
+      <pop-dialog
+        v-if="showGenModal"
+        :showGenModal.sync="showGenModal"
+        type="generalModal"
+        :tips="modalTips"
+        :tipsIcon="modalTipsIcon"
+        :msg="modalMsg"
+      />
+    </el-main>
+  </el-container>
 </template>
 
 <script>
-import inputTable from "../components/InputTable";
+import inputTable from "../components/input-page/InputTable";
 import dropSelect from "../components/DropSelect";
-import defButton from "../components/ButtonDefault";
 import settingMenu from "../components/SettingMenu";
 
 import { mapState, mapGetters } from "vuex";
@@ -74,7 +93,7 @@ export default {
   name: "inputPage",
   data() {
     return {
-      isCover: false,
+      showConfirmModal: false,
       isSave: false,
       showGenModal: false,
       showTitle: true,
@@ -83,7 +102,9 @@ export default {
       modalTips: "",
       modalTipsIcon: "",
       modalMsg: "",
-      saveState: "" //文件保存状态 success||fail
+      saveState: "", //文件保存状态 success||fail
+      isClearAll: false, //通过isClearAll的值来初始化originData
+      confirmCbFn: () => {} //弹窗操作的回调函数
     };
   },
   computed: {
@@ -97,6 +118,7 @@ export default {
     ...mapGetters(["yearRange", "monthRange"]),
     originData() {
       //初始化原始数据
+      this.isClearAll; //只是为了改变isClearAll导致计算属性依赖发生变化，从而强制给计算属性赋默认值
       let obj = {
           date: this.searchYear + "_" + this.searchMonth,
           oilFee: 180,
@@ -137,7 +159,6 @@ export default {
   components: {
     inputTable,
     dropSelect,
-    defButton,
     settingMenu,
     popDialog: () => import("../components/PopDialog")
   },
@@ -146,14 +167,37 @@ export default {
   },
   methods: {
     clickSave() {
-      this.confirmRequest();
+      this.confirmRequest((year, month) => {
+        this.modalTips = "警告";
+        this.modalTipsIcon = require("../assets/warning.png");
+        this.modalMsg = `${year}年${month}月账单数据文件已存在，是否覆盖原数据？`;
+        this.showConfirmModal = true;
+        this.confirmCbFn = val => {
+          if (val) {
+            this.pushData(this.originData);
+          }
+          this.showConfirmModal = false;
+        };
+      });
+    },
+    clearAll() {
+      this.modalTips = "警告";
+      this.modalTipsIcon = require("../assets/warning.png");
+      this.modalMsg = `是否清空当前表格所有数据？`;
+      this.showConfirmModal = true;
+      this.confirmCbFn = val => {
+        if (val) {
+          this.isClearAll = true;
+        }
+        this.showConfirmModal = false;
+      };
     },
     oilFeeFn() {
       this.whichItemShow = "oilFee";
     },
     printerFn() {
       // this.whichItemShow = "printer";
-      // this.isPrint=true;
+      // this.isPrint = true;
       this.modalTips = "温馨提示";
       this.modalTipsIcon = require("../assets/warmTip.png");
       this.modalMsg = "打印功能正在快马加鞭建设中，请耐心等待......";
@@ -195,14 +239,6 @@ export default {
       this.calculateData(this.originData);
     },
 
-    //确认模态框的结果，是否将已有数据覆盖
-    isConfirmCallback(val) {
-      this.isCover = false;
-      if (val) {
-        this.pushData(this.originData);
-      }
-      return this;
-    },
     yearChange(val) {
       this.$store.commit("searchYear", val);
       this.pullData().changeMonLength();
@@ -230,7 +266,7 @@ export default {
       return this;
     },
     //判断该月份数据是否已存在，如果存在则需用户确认,不存在则直接将数据保存到文件中
-    confirmRequest() {
+    confirmRequest(confirmCbFn) {
       let year = this.searchYear,
         month = this.searchMonth,
         site = this.siteHF,
@@ -249,10 +285,7 @@ export default {
           let receiver = res.data;
           if (receiver.status == "ok") {
             //此状态为验证的文件已存在
-            this.modalTips = "警告";
-            this.modalTipsIcon = require("../assets/warning.png");
-            this.modalMsg = `${year}年${month}月账单数据文件已存在，是否覆盖原数据？`;
-            this.isCover = true;
+            confirmCbFn(year, month);
           } else {
             this.pushData();
           }
@@ -365,84 +398,40 @@ export default {
   }
 };
 </script>
-
 <style lang="less" scoped>
-.wrapper {
-  width: 100%;
-  height: 100%;
-  background-color: rgba(148, 205, 228, 0.5);
-  text-align: center;
-  position: relative;
-
-  // @top-height: 56px;
-  @top-height: 4.5rem;
+.container {
   .header {
-    width: 100%;
-    height: @top-height;
-    // padding: 8px 5px 8px;
-    padding: 0.5rem 0.3rem 0.5rem;
-    box-sizing: border-box;
-    // font-size: calc(1.8 * 16px);
-    font-size: 1.8rem;
     background-color: rgba(154, 205, 50, 0.7);
+    line-height: 60px; /*no*/
+    padding: 0 8px; /*no*/
+    font-size: 1.8rem;
+    font-weight: 600;
+
+    .save-area {
+      width: 100%;
+      height: 100%;
+      padding-left: 20px; /*no*/
+      box-sizing: border-box;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  }
+  .pop-relative {
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .head-wrap {
-      font-weight: 600;
-    }
-    .save-data {
-      // width: calc(16px * 6);
-      // height: calc(16px * 2);
-      width: 6rem;
-      height: 2rem;
-      // line-height: calc(16px * 2);
-      line-height: 2rem;
-      margin: auto 0;
-      position: absolute;
-      // left: calc(16px * 2);
-      left: 2rem;
-      top: 0;
-      bottom: 0;
-      border: none;
-      outline: none;
-      background-color: #409eff;
-      cursor: pointer;
-      // border-radius: calc(16px * 0.3);
-      border-radius: 0.3rem;
-      // font-size: calc(16px * 1.2);
-      font-size: 1.2rem;
-      color: #fff;
-      font-weight: 600;
-
-      &:hover {
-        background-color: #74b6f8;
-      }
-
-      &.mousedown {
-        background-color: #409eff;
-      }
-    }
   }
-  .table-area {
-    width: 100%;
-    height: calc(100% - @top-height);
+  #input_year,
+  #input_month {
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    text-align: center;
+    display: inline-block;
+    background-color: aquamarine;
+    padding: 0 0.3rem;
+    cursor: pointer;
+    border-radius: 0.4rem;
   }
-}
-#input_year,
-#input_month {
-  font-size: inherit;
-  font-family: inherit;
-  font-weight: inherit;
-  text-align: inherit;
-  display: inline-block;
-  background-color: aquamarine;
-  // padding: 0 calc(16px * 0.3);
-  padding: 0 0.3rem;
-  cursor: pointer;
-  // border-radius: calc(16px * 0.4);
-  border-radius: 0.4rem;
 }
 </style>
 

@@ -2,7 +2,7 @@
  * @Description: 最后总结表格
  * @Author: LiuHuaifu
  * @Date: 2019-08-09 12:57:09
- * @LastEditTime: 2019-08-12 14:41:40
+ * @LastEditTime: 2019-08-16 16:01:11
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -78,9 +78,7 @@
 import { mapState } from "vuex";
 export default {
   data() {
-    return {
-      isPrint: false
-    };
+    return {};
   },
   computed: {
     ...mapState("FinalTable", ["isFixed"]),
@@ -113,7 +111,10 @@ export default {
       };
     },
     appendixData() {
-      return (item, car) => item.content[car];
+      return (item, car) => {
+        let temp = item.content[car];
+        return typeof temp !== "object" ? temp : "";
+      };
     },
     fixedData() {
       return (item, car) => {
@@ -131,27 +132,52 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style scoped>
 @media print {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .container,
+  .header,
+  .main {
+    overflow: hidden;
+  }
   table {
     font-size: 1rem;
     text-align: center;
-
-    thead tr {
-      height: 60px;
-    }
-    tbody tr {
-      height: 30px;
-    }
-    tfoot tr {
-      height: 60px;
-    }
-    thead .page {
-      font-size: 0.6rem;
-      color: red;
-    }
+  }
+  thead tr {
+    height: 30px !important;
+  }
+  tbody tr {
+    height: 3.5rem !important;
+  }
+  tfoot tr {
+    height: 25px !important;
+  }
+  /* .page {
+    width: 15% !important;
+  }
+  .remain {
+    width: 7% !important;
+  } */
+  tfoot .page {
+    font-size: 6pt !important;
+    color: red;
+    /* line-height: 25px !important; */
+  }
+  th {
+    background-color: rgb(223, 250, 174);
   }
 }
+</style>
+
+<style lang="less" scoped>
 .container {
   height: 100%;
   width: 100%;
@@ -203,13 +229,13 @@ export default {
         font-size: 1.5rem;
       }
       thead tr {
-        height: 60px;
+        line-height: 60px;
       }
       tbody tr {
-        height: 36px;
+        line-height: 36px;
       }
       tfoot tr {
-        height: 50px;
+        line-height: 50px;
 
         &:last-of-type th {
           cursor: pointer;
@@ -223,12 +249,21 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
+          line-height: 1.2rem;
           font-size: 0.7rem;
           color: #fff;
           background-color: rgb(243, 107, 129);
         }
       }
 
+      tfoot .page {
+        @media (max-width: 1200px) {
+          font-size: 16px; /*px*/
+        }
+        @media (max-width: 992px) {
+          font-size: 13px; /*px*/
+        }
+      }
       tfoot .remain {
         font-size: 2rem;
         font-weight: bold;
