@@ -2,26 +2,93 @@
  * @Description: 三日小结账单
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:27:02
- * @LastEditTime: 2019-08-13 15:00:08
+ * @LastEditTime: 2019-08-18 15:42:55
  * @LastEditors: Please set LastEditors
  -->
 <template>
-  <div class="wrapper">
-    <div>这是三日小结页面，功能页面正在建设中，请耐心等待......</div>
-  </div>
+  <el-container class="container" direction="vertical">
+    <el-header class="header">
+      <el-row type="flex" justify="space-between">
+        <div class="head-explain w100 h100">
+          <span>{{searchYear}}</span>年
+          <span>{{searchMonth}}</span>月份每日小结账单
+        </div>
+      </el-row>
+    </el-header>
+    <el-main class="main">
+      <div class="table-item" v-for="(page,index) in pageRange" :key="'triday'+page">
+        <triday-table
+          :carNum="carNum"
+          :page="index+1"
+          :tridayData="dealedData.commonData.threeData"
+          :curMonLength="curMonLength"
+        />
+      </div>
+    </el-main>
+  </el-container>
 </template>
 
 <script>
-export default {};
+import { mapState, mapGetters } from "vuex";
+import TridayTable from "@/components/threeday-page/TridayTable";
+export default {
+  name:'tridayPage',
+  computed: {
+    ...mapState([
+      "searchYear",
+      "searchMonth",
+      "carNum",
+      "dealedData",
+      "curMonLength"
+    ]),
+    ...mapGetters(["pageRange"])
+  },
+  components: {
+    TridayTable
+  }
+};
 </script>
 
 <style lang="less" scoped>
-.wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
+.container {
+  padding: 0.5rem;
+  box-sizing: border-box;
+  font-size: 1.2rem;
+
+  .header {
+    line-height: 60px; /*no*/
+    padding: 0 8px; /*no*/
+    font-size: 1.8rem;
+    font-weight: 600;
+
+    .print-area {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding-left: 1rem;
+    }
+
+    .head-explain {
+      font-size: 2rem;
+      font-weight: 600;
+
+      .vice-title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .main {
+    width: 100%;
+    height: calc(100% -60px);
+    padding: 0 2rem 2rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+
+    .table-item {
+      width: 100%;
+      padding: 10px;
+    }
+  }
 }
 </style>

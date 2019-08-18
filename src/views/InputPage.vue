@@ -2,7 +2,7 @@
  * @Description: 账单输入页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:26:19
- * @LastEditTime: 2019-08-16 15:25:55
+ * @LastEditTime: 2019-08-18 16:50:50
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -104,7 +104,14 @@ export default {
       modalMsg: "",
       saveState: "", //文件保存状态 success||fail
       isClearAll: false, //通过isClearAll的值来初始化originData
-      confirmCbFn: () => {} //弹窗操作的回调函数
+      confirmCbFn: () => {}, //弹窗操作的回调函数
+      loadingInstance: null,
+      loadingOptions: {
+        fullscreen: true,
+        text: "请求数据中......",
+        background: "rgba(0,0,0,.6)",
+        lock: true
+      }
     };
   },
   computed: {
@@ -289,6 +296,7 @@ export default {
           } else {
             this.pushData();
           }
+          this.loadingInstance.close();
         },
         err => {
           console.log(err);
@@ -297,6 +305,7 @@ export default {
       return this;
     },
     requestData(config) {
+      this.loadingInstance = this.$loading(this.loadingOptions);
       if (config.method === "POST") {
         return this.$ajax.post(config.url, config.data);
       } else if (config.method === "GET") {
@@ -321,6 +330,7 @@ export default {
           if (receiver.status == "ok") {
             let dealedData = comMethods.unEncrypt(receiver.data);
             this.$store.commit("refreshDealedData", dealedData);
+            this.loadingInstance.close();
           } else {
             this.$store.commit("refreshDealedData", "init");
             console.log("计算数据失败", receiver);
@@ -357,6 +367,7 @@ export default {
             this.$store.commit("refreshDealedData", "init");
             console.log(receiver);
           }
+          this.loadingInstance.close();
         },
         err => {
           //ajax请求出错
@@ -387,6 +398,7 @@ export default {
             this.originData.hasSaved = false; //如果保存失败，则重新更改数据保存状态
             this.saveState = "fail";
           }
+          this.loadingInstance.close();
           this.isSave = true;
         },
         err => {

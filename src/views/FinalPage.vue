@@ -2,7 +2,7 @@
  * @Description: 最后统计的账单页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:27:13
- * @LastEditTime: 2019-08-16 15:29:05
+ * @LastEditTime: 2019-08-17 14:26:24
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -59,21 +59,7 @@ export default {
       "carNum",
       "dealedData"
     ]),
-    ...mapGetters(["carName"]),
-    pageRange() {
-      let pageRangeArr = [],
-        monthLength = this.curMonLength;
-      for (let day = 1; day <= monthLength; day += 3) {
-        if (monthLength - day < 3) {
-          pageRangeArr.push(
-            day + (monthLength === day ? "" : "-" + monthLength)
-          );
-        } else {
-          pageRangeArr.push(day + "-" + (day + 2));
-        }
-      }
-      return pageRangeArr;
-    },
+    ...mapGetters(["carName","pageRange"]),
     headConfig() {
       return {
         carName: this.carName,

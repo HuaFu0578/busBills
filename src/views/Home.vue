@@ -2,7 +2,7 @@
  * @Description: 主页面
  * @Author: LiuHuaiFu
  * @Date: 2019-08-08 08:01:20
- * @LastEditTime: 2019-08-16 15:42:41
+ * @LastEditTime: 2019-08-18 10:26:30
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -11,7 +11,9 @@
       <aside-menu></aside-menu>
     </el-aside>
     <el-main class="content-show">
-      <router-view />
+      <keep-alive exclude="tridayTable">
+        <router-view />
+      </keep-alive>
     </el-main>
   </el-container>
 </template>
@@ -103,5 +105,15 @@ body > .el-container {
 }
 ::-webkit-scrollbar {
   display: none;
+}
+.xiuban {
+  color: #cd12de !important;
+}
+.weipao {
+  color: #f00 !important;
+}
+.taban {
+  color: orange !important;
+  font-size: 1rem !important;
 }
 </style>

@@ -2,7 +2,7 @@
  * @Description: vuex状态管理仓库
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-15 08:36:58
+ * @LastEditTime: 2019-08-18 16:07:27
  * @LastEditors: Please set LastEditors
  */
 import Vue from 'vue'
@@ -42,7 +42,7 @@ export default new Vuex.Store({
       return new Date(year, month, 0).getDate();
     })(),
 
-    authorized: true, //是否授权
+    authorized: process.env.NODE_ENV !== 'production', //是否授权
 
 
   },
@@ -61,6 +61,20 @@ export default new Vuex.Store({
       let start = 1;
       let arr = new Array(12).join(',').split(',').map((_val, index) => start + index);
       return arr;
+    },
+    pageRange(state) {
+      let pageRangeArr = [],
+        monthLength = state.curMonLength;
+      for (let day = 1; day <= monthLength; day += 3) {
+        if (monthLength - day < 3) {
+          pageRangeArr.push(
+            day + (monthLength === day ? "" : "-" + monthLength)
+          );
+        } else {
+          pageRangeArr.push(day + "-" + (day + 2));
+        }
+      }
+      return pageRangeArr;
     },
   },
   mutations: {

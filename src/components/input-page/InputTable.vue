@@ -2,7 +2,7 @@
  * @Description: 数据输入页
  * @Author: LiuHuaifu
  * @Date: 2019-08-13 09:41:23
- * @LastEditTime: 2019-08-16 08:04:21
+ * @LastEditTime: 2019-08-17 11:22:35
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -286,17 +286,6 @@ export default {
         &:focus {
           border: 2px solid red; /*no*/
         }
-      }
-
-      .xiuban {
-        color: #cd12de;
-      }
-      .weipao {
-        color: #f00;
-      }
-      .taban {
-        color: orange;
-        font-size: 1rem;
       }
     }
   }
