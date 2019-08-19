@@ -2,7 +2,7 @@
  * @Description: 路由配置
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-09 12:52:50
+ * @LastEditTime: 2019-08-19 17:32:26
  * @LastEditors: Please set LastEditors
  */
 import Vue from 'vue'

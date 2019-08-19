@@ -2,23 +2,42 @@
  * @Description:主页面入口
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-15 10:40:36
+ * @LastEditTime: 2019-08-19 17:23:09
  * @LastEditors: Please set LastEditors
  -->
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>busbills</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but busbills doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>busbills</title>
+
+  <!-- 使用CDN的CSS文件 -->
+  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
+  <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="external nofollow" rel="external nofollow" rel="preload"
+    as="style">
+  <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="external nofollow" rel="external nofollow"
+    rel="stylesheet">
+  <% } %>
+  <!-- 使用CDN的JS文件 -->
+  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+  <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
+  <% } %>
+  <!-- <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+  <link href="<%= htmlWebpackPlugin.options.cdn.js[i] %>" rel="external nofollow" rel="preload" as="script">
+  <% } %> -->
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but busbills doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>

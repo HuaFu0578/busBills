@@ -2,7 +2,7 @@
  * @Description: 设置菜单
  * @Author: LiuHuaifu
  * @Date: 2019-08-06 15:19:36
- * @LastEditTime: 2019-08-13 07:37:57
+ * @LastEditTime: 2019-08-19 19:36:41
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -32,7 +32,13 @@
 </template>
 <script>
 export default {
-  props: ["menuItems", "whichItemShow", "defaultParams", "showTitle","paramsCallback"],
+  props: [
+    "menuItems",
+    "whichItemShow",
+    "defaultParams",
+    "showTitle",
+    "paramsCallback"
+  ],
   components: {
     itemShow: () => import("../components/MenuItemShow")
   },
@@ -63,6 +69,7 @@ export default {
   border-radius: 0.5rem;
   cursor: pointer;
   position: absolute;
+  z-index: 1;
   right: 1rem;
   top: 0;
   bottom: 0;
@@ -128,7 +135,7 @@ export default {
       @arrow-size: 0.6rem;
       content: "";
       position: absolute;
-      bottom: -@arrow-size - .2rem;
+      bottom: -@arrow-size - 0.2rem;
       height: 0;
       left: 0;
       right: 0;

@@ -2,7 +2,7 @@
  * @Description: vuex状态管理仓库
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-18 16:07:27
+ * @LastEditTime: 2019-08-19 17:32:21
  * @LastEditors: Please set LastEditors
  */
 import Vue from 'vue'

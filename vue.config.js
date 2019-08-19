@@ -2,29 +2,54 @@
  * @Description: vue配置文件
  * @Author: LiuHuaifu
  * @Date: 2019-08-07 19:33:27
- * @LastEditTime: 2019-08-15 11:00:41
+ * @LastEditTime: 2019-08-19 19:27:40
  * @LastEditors: Please set LastEditors
  */
-const px2rem = require("postcss-px2rem");
+const isProduction = process.env.NODE_ENV === 'production';
+
+const cdn = {
+    css: [],
+    js: [
+        'https://cdn.bootcss.com/vue/2.6.10/vue.min.js',
+        'https://cdn.bootcss.com/vuex/3.1.1/vuex.min.js',
+        'https://cdn.bootcss.com/vue-router/3.1.2/vue-router.min.js',
+        'https://cdn.bootcss.com/axios/0.19.0/axios.min.js',
+        'https://cdn.bootcss.com/element-ui/2.11.1/index.js',
+        'https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js'
+    ]
+}
+
 module.exports = {
-    publicPath: process.env.NODE_ENV === 'production' ? '/busBills/' : '/',
+    publicPath: isProduction ? '/busBills/' : '/',
 
     productionSourceMap: false,
 
     outputDir: "busBills",
 
-    css: {
-        loaderOptions: {
-            postcss: {
-                plugins: [
-                    // px2rem({
-                    //     rootValue: 153.6,
-                    //     mediaQuery: true, //（布尔值）允许在媒体查询中转换px。
-                    //     minPixelValue: 0 //设置要替换的最小像素值(3px会被转rem)。 默认 0
-                    // })
-                ]
+    chainWebpack: config => {
+        // 生产环境配置
+        if (isProduction) {
+            // 生产环境注入cdn
+            config.plugin('html')
+                .tap(args => {
+                    args[0].cdn = cdn;
+                    return args;
+                });
+        }
+    },
+
+    configureWebpack: config => {
+        if (isProduction) {
+            // 用cdn方式引入
+            config.externals = {
+                'vue': 'Vue',
+                'vuex': 'Vuex',
+                'vue-router': 'VueRouter',
+                'axios': 'axios',
+                'element-ui': 'ELEMENT',
+                'echarts': 'echarts'
             }
         }
-    }
+    },
 
 }

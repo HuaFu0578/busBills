@@ -2,7 +2,7 @@
  * @Description: 最后统计的账单页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:27:13
- * @LastEditTime: 2019-08-17 14:26:24
+ * @LastEditTime: 2019-08-19 20:03:33
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -29,10 +29,10 @@
       </el-row>
     </el-header>
     <el-main class="main w100">
-      <div class="table-view w100 h100" v-if="whichView=='table'">
+      <div class="table-view w100 tb-h" v-if="whichView=='table'">
         <final-table :headConfig="headConfig" :bodyConfig="bodyConfig"></final-table>
       </div>
-      <div class="graphics-view w100 h100" v-else-if="whichView=='graphics'">
+      <div class="graphics-view w100 tb-h" v-else-if="whichView=='graphics'">
         <final-graphics />
       </div>
     </el-main>
@@ -59,7 +59,7 @@ export default {
       "carNum",
       "dealedData"
     ]),
-    ...mapGetters(["carName","pageRange"]),
+    ...mapGetters(["carName", "pageRange"]),
     headConfig() {
       return {
         carName: this.carName,
@@ -146,6 +146,9 @@ export default {
     cursor: pointer;
     background-repeat: no-repeat;
     background-size: 100% 100%;
+  }
+  .tb-h {
+    height: 100%;
   }
   .table-view-bg {
     background-image: url(../assets/table-view.png);

@@ -2,7 +2,7 @@
  * @Description: 最后总结表格
  * @Author: LiuHuaifu
  * @Date: 2019-08-09 12:57:09
- * @LastEditTime: 2019-08-17 17:26:54
+ * @LastEditTime: 2019-08-19 20:50:57
  * @LastEditors: Please set LastEditors
  -->
 <template>
@@ -138,38 +138,29 @@ export default {
   body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
+    width: 210mm !important;
+    height: 297mm !important;
   }
 
-  .container,
-  .header,
-  .main {
-    overflow: hidden;
+  .table-box {
+    width: 100%;
+    height: 90% !important;
   }
   table {
     font-size: 1rem;
     text-align: center;
   }
   thead tr {
-    height: 30px !important;
+    line-height: 2rem !important;
   }
   tbody tr {
     height: 3.5rem !important;
   }
   tfoot tr {
-    height: 25px !important;
+    line-height: 1.8rem !important;
   }
-  /* .page {
-    width: 15% !important;
-  }
-  .remain {
-    width: 7% !important;
-  } */
   tfoot .page {
-    font-size: 6pt !important;
-    color: red;
-    /* line-height: 25px !important; */
+    font-size: 7pt !important;
   }
   th {
     background-color: rgb(223, 250, 174);
@@ -182,24 +173,18 @@ export default {
   height: 100%;
   width: 100%;
 
-  .header {
-    width: 100%;
-    height: 10%;
-    flex: 1 1 10%;
-  }
-
   .table-box {
     width: 100%;
-    height: 90%;
-    flex: 1 1 90%;
+    height: 100%;
 
     table {
       width: 100%;
       height: 100%;
+      line-height: 1.2rem;
       font-size: 1.5rem;
       border-collapse: collapse;
       border-color: #000;
-      table-layout: fixed;
+      // table-layout: fixed;
       empty-cells: show;
 
       @alpha: 0.7;
@@ -229,13 +214,11 @@ export default {
         font-size: 1.5rem;
       }
       thead tr {
-        line-height: 60px;
+        height: 60px;
       }
-      tbody tr {
-        line-height: 36px;
-      }
+
       tfoot tr {
-        line-height: 50px;
+        height: 50px;
 
         &:last-of-type th {
           cursor: pointer;
