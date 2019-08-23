@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -21,9 +22,11 @@
     "echarts": "^4.2.1",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
-    "lib-flexible": "^0.3.2",
     "vue-echarts": "^4.0.3",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "@vue/cli-plugin-unit-mocha": "^3.9.0",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "chai": "^4.1.2"
   },
   "postcss": {
     "plugins": {
