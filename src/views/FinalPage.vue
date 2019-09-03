@@ -2,31 +2,41 @@
  * @Description: 最后统计的账单页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:27:13
- * @LastEditTime: 2019-08-19 20:03:33
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-03 15:56:10
+ * @LastEditors: your name
  -->
 <template>
   <el-container class="container" direction="vertical" v-print="isPrint">
     <el-header class="header">
-      <el-row type="flex" justify="space-between">
-        <el-col :span="6">
-          <div class="print-area noprint w100 h100">
+      <el-row type="flex" justify="space-between" class="is-mobile-hidden head-wrap">
+        <el-col :span="5">
+          <div class="print-area noprint w100 h100" :class="viewBgClass">
             <el-button type="primary" size="medium" @click="clickPrint">打印</el-button>
           </div>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="14">
           <div class="head-explain w100 h100">
             <span>{{searchYear}}</span>年
             <span>{{searchMonth}}</span>月份平衡账
             <span class="vice-title">{{viceTitle}}</span>
           </div>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="5">
           <div class="menu w100 h100 noprint">
             <div class="trans-view" :class="viewBgClass" @click="ClickTransView"></div>
           </div>
         </el-col>
       </el-row>
+      <div class="hd-row is-mobile-show">
+        <div class="head-explain w100 h100">
+          <span>{{searchYear}}</span>年
+          <span>{{searchMonth}}</span>月份平衡账
+          <span class="vice-title">{{viceTitle}}</span>
+        </div>
+        <div class="menu w100 h100 noprint">
+          <div class="trans-view" :class="viewBgClass" @click="ClickTransView"></div>
+        </div>
+      </div>
     </el-header>
     <el-main class="main w100">
       <div class="table-view w100 tb-h" v-if="whichView=='table'">
@@ -106,21 +116,27 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  padding: 0.5rem;
+  padding: 1vh 1.5vh 0;
   box-sizing: border-box;
   font-size: 1.2rem;
 
   .header {
-    line-height: 60px; /*no*/
-    padding: 0 8px; /*no*/
+    height: 8vh !important;
+    line-height: 8vh;
     font-size: 1.8rem;
     font-weight: 600;
+    vertical-align: middle;
+    max-height: 60px;
 
+    .head-wrap {
+      width: 100%;
+      height: 100%;
+      align-items: center;
+    }
     .print-area {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      padding-left: 1rem;
     }
 
     .head-explain {
@@ -132,12 +148,13 @@ export default {
       }
     }
   }
-
+  .main {
+    width: 100%;
+  }
   .menu {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding-right: 2.5rem;
     box-sizing: border-box;
   }
   .trans-view {
@@ -148,7 +165,8 @@ export default {
     background-size: 100% 100%;
   }
   .tb-h {
-    height: 100%;
+    width: 100%;
+    height: 88vh;
   }
   .table-view-bg {
     background-image: url(../assets/table-view.png);
@@ -156,5 +174,100 @@ export default {
   .graphics-view-bg {
     background-image: url(../assets/graphics-view.png);
   }
+}
+</style>
+<style lang="less" scoped>
+// 移动端适配
+@media (min-width: 768px) {
+  .container {
+    .header {
+      min-height: 40px;
+      .is-mobile-show {
+        display: none;
+      }
+      .is-mobile-hidden {
+        display: flex;
+      }
+    }
+  }
+}
+@media (max-width: 992px) {
+  .container {
+    .head-explain {
+      font-size: 3.5vw !important;
+    }
+  }
+}
+@media (max-width: 768px) {
+  .container {
+    .header {
+      min-height: auto;
+      padding: 0;
+      .is-mobile-show {
+        display: block;
+      }
+      .is-mobile-hidden {
+        display: none;
+      }
+      .hd-row {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .menu {
+          width: 4vw;
+          height: 4vw;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          margin: auto;
+          right: 3.5vw;
+
+          .trans-view {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+      .head-explain {
+        font-size: 4vw !important;
+        .vice-title {
+          font-size: 3vw !important;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 576px) {
+  .container {
+    .tb-h {
+      height: 74vh;
+    }
+  }
+}
+@media (max-height: 500px) {
+  .container {
+    .tb-h {
+      height: calc(95vh - 40px);
+    }
+  }
+}
+@media (min-height: 750px) {
+  .container {
+    .tb-h {
+      height: calc(80vh - 60px);
+    }
+  }
+}
+</style>
+
+// TODO:对统计图添加打印功能
+///临时屏蔽功能
+<style scoped>
+.print-area.table-view-bg {
+  display: none !important;
+}
+.print-area.graphics-view-bg {
+  background: none;
 }
 </style>

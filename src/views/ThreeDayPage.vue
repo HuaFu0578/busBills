@@ -2,8 +2,8 @@
  * @Description: 三日小结账单
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:27:02
- * @LastEditTime: 2019-08-18 15:42:55
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-02 16:32:45
+ * @LastEditors: your name
  -->
 <template>
   <el-container class="container" direction="vertical">
@@ -32,7 +32,7 @@
 import { mapState, mapGetters } from "vuex";
 import TridayTable from "@/components/threeday-page/TridayTable";
 export default {
-  name:'tridayPage',
+  name: "tridayPage",
   computed: {
     ...mapState([
       "searchYear",
@@ -80,7 +80,7 @@ export default {
 
   .main {
     width: 100%;
-    height: calc(100% -60px);
+    height: calc(100% - 60px);
     padding: 0 2rem 2rem;
     box-sizing: border-box;
     overflow-y: auto;
@@ -89,6 +89,31 @@ export default {
       width: 100%;
       padding: 10px;
     }
+  }
+}
+</style>
+<style lang="less" scoped>
+//移动端适配
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.5vh;
+
+    .header {
+      height: 8vh !important;
+      line-height: 8vh !important;
+      padding: 0;
+      .head-explain {
+        font-size: 4vw;
+      }
+    }
+    .main {
+      height: 80vh;
+    }
+  }
+}
+@media (max-width: 425px) {
+  .container .header .head-explain {
+    font-size: 5vw;
   }
 }
 </style>

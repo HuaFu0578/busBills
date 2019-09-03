@@ -2,12 +2,12 @@
  * @Description: 设置菜单
  * @Author: LiuHuaifu
  * @Date: 2019-08-06 15:19:36
- * @LastEditTime: 2019-08-19 19:36:41
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-01 11:21:05
+ * @LastEditors: your name
  -->
 <template>
   <div
-    class="setting-menu"
+    class="setting-menu stm balance"
     :class="Object.keys(menuItems).length>0?'item-num-'+Object.keys(menuItems).length:''"
     title="设置"
     @mouseleave="handleLeave"
@@ -15,7 +15,7 @@
     <button
       v-for="(item,key) in menuItems"
       :key="item.title"
-      :class="`${key} ${whichItemShow==key?'down-arrow':''}`"
+      :class="`menu-btn ${key} ${whichItemShow==key?'down-arrow':''}`"
       :title="showTitle?item.title:''"
       @click="item.callback"
     >
@@ -148,4 +148,16 @@ export default {
   }
 }
 </style>
-
+<style lang="less" scoped>
+// 移动端适配
+@media (max-width: 768px) {
+  .setting-menu {
+    &.balance.stm:hover {
+      width: 1.8rem+1rem;
+    }
+    button:not(.oilFee) {
+      display: none;
+    }
+  }
+}
+</style>

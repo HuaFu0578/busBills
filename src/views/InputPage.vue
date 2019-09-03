@@ -2,24 +2,28 @@
  * @Description: 账单输入页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:26:19
- * @LastEditTime: 2019-08-18 16:50:50
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-01 17:11:00
+ * @LastEditors: your name
  -->
 <template>
-  <el-container direction="vertical" class="container">
+  <el-container direction="vertical" class="container inputpage">
     <el-header class="header">
-      <el-row type="flex" class="row-bg" justify="space-between">
+      <el-row type="flex" class="head-wrap" justify="space-between">
         <el-col :span="6" class="el-row is-justify-flex-start el-row--flex">
-          <el-col :span="8">
-            <div class="save-area">
-              <el-button type="primary" size="medium" @click="clickSave">保存</el-button>
+          <el-col class="head-left" :span="8">
+            <div class="oper-area">
+              <el-button class="text-btn" type="primary" size="medium" @click="clickSave">保存</el-button>
             </div>
           </el-col>
-          <el-col :span="12">
-            <div class="save-area">
-              <el-button type="danger" size="medium" @click="clearAll">清空表格</el-button>
+          <el-col class="head-left" :span="12">
+            <div class="oper-area">
+              <el-button class="text-btn" type="danger" size="medium" @click="clearAll">清空表格</el-button>
             </div>
           </el-col>
+          <div class="lf-btn-group">
+            <div class="save-btn" @click="clickSave"></div>
+            <div class="delete-btn" @click="clearAll"></div>
+          </div>
         </el-col>
         <el-col :span="12">
           <div class="header-title w100 h100">
@@ -413,16 +417,27 @@ export default {
 <style lang="less" scoped>
 .container {
   .header {
-    background-color: rgba(154, 205, 50, 0.7);
-    line-height: 60px; /*no*/
+    background-color: rgba(154, 205, 50, 0.6);
+    line-height: 8vh; /*no*/
+    height: 8vh !important;
     padding: 0 8px; /*no*/
     font-size: 1.8rem;
     font-weight: 600;
 
-    .save-area {
+    .head-wrap {
       width: 100%;
       height: 100%;
-      padding-left: 20px; /*no*/
+    }
+    .header-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .oper-area {
+      width: 100%;
+      height: 100%;
+      margin-left: 20px; /*no*/
       box-sizing: border-box;
       display: flex;
       justify-content: flex-start;
@@ -456,5 +471,73 @@ export default {
 }
 .header >>> .output {
   background-image: url(../assets/output.png);
+}
+</style>
+
+<style lang="less"  scoped>
+/* 移动端适配 */
+@media (min-width: 768px) {
+  .container.inputpage {
+    .header {
+      min-height: 60px;
+      .lf-btn-group {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .container.inputpage {
+    .header {
+      .head-left {
+        display: none;
+      }
+      .lf-btn-group {
+        width: 100%;
+        height: 100%;
+        padding: 1.5vh 1.5vh 1.5vh 1.5vh;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        .common-style {
+          width: 4vh;
+          height: 4vh;
+          border-radius: 50%;
+          margin-right: 1.5vh;
+          background-size: 70% 70%;
+          background-position: center center;
+          background-repeat: no-repeat;
+        }
+        .save-btn {
+          .common-style;
+          background-color: #409eff;
+          border-color: #409eff;
+          background-image: url(../assets/save-data.png);
+        }
+        .delete-btn {
+          .common-style;
+          background-color: #f56c6c;
+          border-color: #f56c6c;
+          background-image: url(../assets/delete-data.png);
+        }
+      }
+      .header-title {
+        font-size: 4vw !important;
+      }
+    }
+    .main {
+      height: 80vh !important;
+    }
+  }
+}
+@media (max-width: 576px) {
+  .container.inputpage {
+    .main {
+      height: 74vh !important;
+    }
+  }
 }
 </style>

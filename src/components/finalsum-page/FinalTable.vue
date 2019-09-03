@@ -2,8 +2,8 @@
  * @Description: 最后总结表格
  * @Author: LiuHuaifu
  * @Date: 2019-08-09 12:57:09
- * @LastEditTime: 2019-08-19 20:50:57
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-03 15:43:32
+ * @LastEditors: your name
  -->
 <template>
   <div class="container">
@@ -180,12 +180,12 @@ export default {
     table {
       width: 100%;
       height: 100%;
-      line-height: 1.2rem;
+      line-height: 1.2;
       font-size: 1.5rem;
       border-collapse: collapse;
       border-color: #000;
-      // table-layout: fixed;
       empty-cells: show;
+      white-space: nowrap;
 
       @alpha: 0.7;
 
@@ -214,11 +214,16 @@ export default {
         font-size: 1.5rem;
       }
       thead tr {
-        height: 60px;
+        height: 6.8vh;
+        min-height: 40px;
       }
-
+      tbody tr {
+        height: 5vh;
+        min-height: 24px;
+      }
       tfoot tr {
-        height: 50px;
+        height: 6vh;
+        min-height: 30px;
 
         &:last-of-type th {
           cursor: pointer;
@@ -240,7 +245,7 @@ export default {
       }
 
       tfoot .page {
-        @media (max-width: 1200px) {
+        @media (max-width: 1280px) {
           font-size: 16px; /*px*/
         }
         @media (max-width: 992px) {
@@ -278,4 +283,46 @@ export default {
   }
 }
 </style>
-
+<style lang="less" scoped>
+//移动端适配
+@media (max-width: 992px) {
+  .container table th {
+    font-size: 2.2vw !important;
+  }
+}
+@media (max-width: 768px) {
+  .container {
+    table {
+      tfoot tr {
+        th {
+          font-size: 2vw !important;
+        }
+      }
+      th {
+        font-size: 2.7vw !important;
+      }
+      td {
+        font-size: 2.5vw !important;
+      }
+    }
+  }
+}
+@media (max-width: 576px) {
+  .container table {
+    th {
+      font-size: 2.4vw !important;
+    }
+  }
+}
+@media (max-height: 500px) {
+  .container table {
+    thead,
+    tbody,
+    tfoot {
+      tr {
+        min-height: auto;
+      }
+    }
+  }
+}
+</style>

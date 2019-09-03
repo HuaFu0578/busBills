@@ -2,8 +2,8 @@
  * @Description: 最后账单统计图
  * @Author: LiuHuaifu
  * @Date: 2019-08-11 16:11:37
- * @LastEditTime: 2019-08-16 10:36:35
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-03 20:07:41
+ * @LastEditors: your name
  -->
 <template>
   <div class="container">
@@ -18,6 +18,10 @@ import staticCharts from "./StaticCharts";
 export default {
   data() {
     return {
+      isMobile: false,
+      incomeMin: Infinity,
+      incomeMax: -Infinity,
+      incomeAverage: 0,
       deductOpt: {
         title: {
           text: "10%提成进出账总数",
@@ -37,6 +41,7 @@ export default {
           },
           axisPointer: { show: true, type: "line" }
         },
+        grid: { containLabel: true },
         legend: { bottom: "5%" },
         dataset: {},
         tooltip: {},
@@ -84,16 +89,14 @@ export default {
           axisLabel: {
             show: true,
             fontSize: 12,
-            formatter: "{value}元"
+            formatter: this.formatIncomeData
           },
           axisPointer: { show: true, type: "line" }
         },
         legend: { bottom: "5%" },
         dataset: {},
         tooltip: {},
-        grid: {
-          x2: 150
-        },
+        grid: { containLabel: true },
         series: [
           {
             type: "bar",
@@ -129,6 +132,7 @@ export default {
             formatter: "{value}天"
           }
         },
+        grid: { containLabel: true },
         series: [
           {
             type: "bar",
@@ -193,15 +197,24 @@ export default {
       let specialData = this.dealedData.specialData,
         monthSum = specialData.monthSum || "",
         dimensions = ["income", "毛收入（包括油补）"],
-        source = [];
+        carName = this.carName,
+        source = [],
+        min = Infinity,
+        max = -Infinity,
+        average = monthSum.averageSum;
       this.carName.forEach(carname => {
-        let car = carname.slice(1);
+        let car = carname.slice(1),
+          value = monthSum ? monthSum[car] : "";
+        value < min ? (min = value) : value > max ? (max = value) : "";
         source.push({
           [dimensions[0]]: carname,
-          [dimensions[1]]: monthSum ? monthSum[car] : ""
+          [dimensions[1]]: value
         });
       });
-      this.setAverageLine(monthSum.averageSum);
+      this.setAverageLine(average);
+      this.incomeMin = min;
+      this.incomeMax = max;
+      this.incomeAverage = average;
       return { dimensions, source };
     },
     specialCir() {
@@ -242,12 +255,21 @@ export default {
     staticCharts
   },
   created() {
+    this.rotateLabel();
     this.setPartParam();
   },
   activated() {
     this.setPartParam();
   },
   methods: {
+    formatIncomeData(val, index) {
+      if (index < 3) {
+        if (val < this.incomeMin) {
+          //TODO:将使用最小值将Y轴分成4：6刻度，最小值从4/10处开始，将数据集中到上面刻度
+        }
+      }
+      return `${val}元`;
+    },
     setPartParam() {
       this.$set(this.deductOpt, "dataset", this.deductTotal);
       this.$set(this.incomeOpt, "dataset", this.sumAmount);
@@ -256,22 +278,45 @@ export default {
     setAverageLine(val) {
       let markLine = {
         label: {
-          position: "end",
+          position: "start",
           formatter: "{b}:{c}元",
           color: "#fff",
           backgroundColor: "#582fdf",
-          fontSize: 16,
+          fontSize: 12,
           padding: 5,
           borderRadius: 5
         },
         lineStyle: {
           type: "dotted",
-          color: "red"
+          color: "rgb(255,0,0)"
         },
         precision: 0,
-        data: [{ name: "平均", yAxis: val }]
+        data: [{ name: "平均", yAxis: val }],
+        symbol: ["circle", "none"]
       };
       this.incomeOpt.series[0].markLine = markLine;
+    },
+    rotateLabel() {
+      //如果为移动端，则稍微调整Canvas图
+      if (window.innerWidth < 768) {
+        [this.deductOpt, this.incomeOpt, this.specialOpt].forEach(
+          (el, index) => {
+            this.$set(el.xAxis, "axisLabel", {
+              rotate: 45,
+              fontSize: 12
+            });
+            if (index == 0) {
+              let fontSize = window.innerWidth < 350 ? 8 : 10;
+              this.$set(el.series[0].label, "fontSize", fontSize);
+              this.$set(el.series[1].label, "fontSize", fontSize);
+            } else if (index == 1) {
+              this.$set(el.series[0].label, "rotate", 45);
+              this.$set(el.title, "top", "0");
+              this.$set(el.series[0].label, "position", [0, "-5%"]);
+            }
+          }
+        );
+      }
     }
   }
 };
@@ -280,16 +325,32 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: center;
+  // align-items: center;
   .g1,
   .g2,
   .g3 {
-    width: 700px;
-    height: 400px;
+    margin: auto;
+    width: 800px;
+    height: 50vh;
+    min-height: 400px;
   }
 }
-
+</style>
+<style lang="less" scoped>
+//移动端适配
+@media (max-width: 768px) {
+  .container {
+    height: auto;
+    .g1,
+    .g2,
+    .g3 {
+      width: 90vw;
+      height: 50vh;
+      box-sizing: border-box;
+    }
+  }
+}
 </style>

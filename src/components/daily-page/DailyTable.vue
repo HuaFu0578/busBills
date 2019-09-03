@@ -2,8 +2,8 @@
  * @Description: 每日小结表格
  * @Author: LiuHuaifu
  * @Date: 2019-08-16 19:21:46
- * @LastEditTime: 2019-08-18 16:09:00
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-03 10:26:54
+ * @LastEditors: your name
  -->
 <template>
   <div class="wrapper">
@@ -11,6 +11,10 @@
       <caption>
         <span>{{month}}月{{day}}日小结</span>
       </caption>
+      <colgroup>
+        <col class="lf-th" />
+        <col class="rt-td" v-for="val in 5" :key="'col-'+val" />
+      </colgroup>
       <thead>
         <tr>
           <th v-for="item in titleList" :key="month+'_'+day+item">{{item}}</th>
@@ -24,7 +28,7 @@
           <td>{{dayData?dayData.average:""}}</td>
           <td>{{dayData?dayData[car].inbill:""}}</td>
           <td>{{dayData?dayData[car].outbill:""}}</td>
-          <td v-if="index==5" class="remain-th">余额</td>
+          <th v-if="index==5" class="remain-th">余额</th>
         </tr>
       </tbody>
       <tfoot>
@@ -78,6 +82,8 @@ export default {
     width: 100%;
     height: 100%;
     border-collapse: collapse;
+    white-space: nowrap;
+
     tr {
       line-height: 2rem;
     }
@@ -86,6 +92,7 @@ export default {
       font-weight: 600;
       caption-side: top;
       line-height: 3rem;
+      box-sizing: border-box;
 
       span {
         background-color: #fff;
@@ -116,6 +123,50 @@ export default {
     }
     .remain-td {
       background-color: rgb(210, 210, 210);
+    }
+  }
+}
+</style>
+<style lang="less" scoped>
+//移动端适配
+@media (max-width: 768px) {
+  .wrapper {
+    table {
+      table-layout: fixed;
+      tr {
+        line-height: 1.2;
+        th,
+        td {
+          padding: 1px;
+        }
+      }
+
+      .lf-th {
+        width: 22%;
+      }
+      caption {
+        font-size: 3.5vw;
+        span {
+          padding: 3px;
+        }
+      }
+      th,
+      td {
+        font-size: 3vw;
+      }
+    }
+  }
+}
+@media (max-width: 425px) {
+  .wrapper {
+    table {
+      caption {
+        font-size: 4.5vw;
+      }
+      th,
+      td {
+        font-size: 4vw;
+      }
     }
   }
 }

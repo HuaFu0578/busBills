@@ -2,8 +2,8 @@
  * @Description: 数据输入页
  * @Author: LiuHuaifu
  * @Date: 2019-08-13 09:41:23
- * @LastEditTime: 2019-08-17 11:22:35
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-01 09:17:44
+ * @LastEditors: your name
  -->
 <template>
   <div class="input-table">
@@ -202,7 +202,7 @@ export default {
 .input-table {
   width: 100%;
   height: 100%;
-  padding: 0.6rem 1.2rem;
+  padding: 0 1.5vh;
   box-sizing: border-box;
 
   @thead-row-heghit: 3.5rem;
@@ -216,7 +216,7 @@ export default {
     }
   }
   .body-wrapper {
-    height: 90%;
+    height: 80vh;
     overflow-y: auto;
     /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
     -ms-overflow-style: none;
@@ -292,3 +292,26 @@ export default {
 }
 </style>
 
+<style lang="less" scoped>
+/*移动端适配*/
+@media (max-width: 1024px) {
+  table {
+    th {
+      font-size: 2.5vw !important;
+    }
+    td input {
+      font-size: 2vw !important;
+    }
+  }
+}
+@media (max-width: 768px) {
+  table {
+    th {
+      font-size: 3vw !important;
+    }
+    td input{
+      font-size: 2.5vw !important;
+    }
+  }
+}
+</style>

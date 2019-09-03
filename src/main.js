@@ -2,8 +2,8 @@
  * @Description: 项目主入口文件
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-19 17:32:29
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-08-29 16:20:37
+ * @LastEditors: your name
  */
 import Vue from 'vue'
 import App from './App.vue'

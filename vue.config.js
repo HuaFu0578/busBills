@@ -2,10 +2,11 @@
  * @Description: vue配置文件
  * @Author: LiuHuaifu
  * @Date: 2019-08-07 19:33:27
- * @LastEditTime: 2019-08-19 19:27:40
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-08-29 16:19:44
+ * @LastEditors: your name
  */
 const isProduction = process.env.NODE_ENV === 'production';
+const CompressionPlugin = require("compression-webpack-plugin");
 
 const cdn = {
     css: [],
@@ -23,6 +24,10 @@ module.exports = {
     publicPath: isProduction ? '/busBills/' : '/',
 
     productionSourceMap: false,
+
+    // productionGzip: true,
+
+    // productionGzipExtensions: ['js', 'css', 'html'],
 
     outputDir: "busBills",
 
@@ -42,13 +47,20 @@ module.exports = {
         if (isProduction) {
             // 用cdn方式引入
             config.externals = {
-                'vue': 'Vue',
-                'vuex': 'Vuex',
-                'vue-router': 'VueRouter',
-                'axios': 'axios',
-                'element-ui': 'ELEMENT',
-                'echarts': 'echarts'
-            }
+                    'vue': 'Vue',
+                    'vuex': 'Vuex',
+                    'vue-router': 'VueRouter',
+                    'axios': 'axios',
+                    'element-ui': 'ELEMENT',
+                    'echarts': 'echarts'
+                },
+                config.plugins.push(new CompressionPlugin({
+                    test: /\.js$|\.css$|.html$/,
+                    algorithm: 'gzip',
+                    threshold: 10240,
+                    minRatio: 0.8,
+                    deleteOriginalAssets: false,
+                }));
         }
     },
 

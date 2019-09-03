@@ -2,8 +2,8 @@
  * @Description: 每日小结账单页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:26:46
- * @LastEditTime: 2019-08-17 11:20:16
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-03 09:58:31
+ * @LastEditors: your name
  -->
 <template>
   <el-container class="container" direction="vertical">
@@ -89,6 +89,33 @@ export default {
       padding: 1rem;
       box-sizing: border-box;
     }
+  }
+}
+</style>
+<style lang="less" scoped>
+//移动端适配
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.5vh;
+    .header {
+      height: 8vh !important;
+      line-height: 8vh;
+      .head-explain {
+        font-size: 4vw;
+      }
+    }
+    .main {
+      height: 80vh;
+      .table-item {
+        width: 100%;
+        min-width: auto;
+      }
+    }
+  }
+}
+@media (max-width: 425px) {
+  .container .header .head-explain {
+    font-size: 5vw;
   }
 }
 </style>

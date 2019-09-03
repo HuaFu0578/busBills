@@ -2,11 +2,11 @@
  * @Description: 主页面
  * @Author: LiuHuaiFu
  * @Date: 2019-08-08 08:01:20
- * @LastEditTime: 2019-08-18 10:26:30
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-01 09:06:00
+ * @LastEditors: your name
  -->
 <template>
-  <el-container class="container">
+  <el-container class="container home">
     <el-aside class="aside-menu" width="15%">
       <aside-menu></aside-menu>
     </el-aside>
@@ -15,12 +15,14 @@
         <router-view />
       </keep-alive>
     </el-main>
+    <navigate-bar class="nav-bar" />
   </el-container>
 </template>
 <script>
 import Vue from "vue";
 import AsideMenu from "@/components/home/AsideMenu";
 import { setTimeout } from "timers";
+import NavigateBar from "@/components/home/NavigateBar";
 
 Vue.directive("print", (el, binding, vnode) => {
   if (binding.value) {
@@ -48,7 +50,8 @@ Vue.directive("print", (el, binding, vnode) => {
 });
 export default {
   components: {
-    AsideMenu
+    AsideMenu,
+    NavigateBar
   }
 };
 </script>
@@ -93,6 +96,10 @@ body > .el-container {
 .aside-menu {
   height: 100%;
 }
+.container .content-show {
+  width: 100%;
+  height: 100%;
+}
 
 .el-main {
   padding: 0;
@@ -115,5 +122,31 @@ body > .el-container {
 .taban {
   color: orange !important;
   font-size: 1rem !important;
+}
+</style>
+<style lang="less" scoped>
+/* 移动端适配 */
+.container .nav-bar {
+  display: none;
+}
+@media (max-width: 768px) {
+  .container.home {
+    padding-bottom: 10vh;
+    box-sizing: border-box;
+    .aside-menu {
+      display: none;
+    }
+
+    .nav-bar {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 10;
+      width: 100%;
+      height: 8vh;
+      background-color: rgba(102, 241, 125, 0.7);
+    }
+  }
 }
 </style>

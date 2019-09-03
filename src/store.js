@@ -2,8 +2,8 @@
  * @Description: vuex状态管理仓库
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-08-19 17:32:21
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-09-03 13:58:08
+ * @LastEditors: your name
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -112,7 +112,7 @@ export default new Vuex.Store({
     "FinalTable": {
       namespaced: true,
       state: {
-        isFixed: true,
+        isFixed: false,
       },
       mutations: {
         changeIsFixed(state, payLoad) {
