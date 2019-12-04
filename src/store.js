@@ -2,7 +2,7 @@
  * @Description: vuex状态管理仓库
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 07:35:24
- * @LastEditTime: 2019-09-03 13:58:08
+ * @LastEditTime: 2019-12-04 16:41:17
  * @LastEditors: your name
  */
 import Vue from 'vue'
@@ -19,11 +19,16 @@ export default new Vuex.Store({
     searchMonth: new Date().getMonth() + 1,
 
     siteHF: {
-      hostName: 'https://api.hfullest.com',
+      hostName: 'https://www.hfullest.com',
       getData: '/busBillsCalculator/getData',
       setData: '/busBillsCalculator/setData',
       calData: '/busBillsCalculator/calData',
       rootHostName: 'https://www.hfullest.com',
+      // hostName: 'https://127.0.0.1',
+      // getData: '/busBills/api/getData',
+      // setData: '/busBillsCalculator/setData',
+      // calData: '/busBillsCalculator/calData',
+      // rootHostName: 'https://www.hfullest.com',
     },
 
     dealedData: {
@@ -43,6 +48,8 @@ export default new Vuex.Store({
     })(),
 
     authorized: process.env.NODE_ENV !== 'production', //是否授权
+
+    arithmetic: "deductFirst", //使用的算法
 
 
   },
@@ -103,6 +110,9 @@ export default new Vuex.Store({
     },
     searchMonth(state, payLoad) {
       state.searchMonth = payLoad;
+    },
+    changeArithmetic(state, payLoad) {
+      state.arithmetic = payLoad;
     }
   },
   actions: {

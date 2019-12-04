@@ -2,7 +2,7 @@
  * @Description: 最后账单统计图
  * @Author: LiuHuaifu
  * @Date: 2019-08-11 16:11:37
- * @LastEditTime: 2019-09-03 20:07:41
+ * @LastEditTime: 2019-12-04 09:28:00
  * @LastEditors: your name
  -->
 <template>
@@ -169,18 +169,23 @@ export default {
     };
   },
   computed: {
-    ...mapState(["dealedData"]),
+    ...mapState(["dealedData", "arithmetic"]),
     ...mapState("FinalTable", ["isFixed"]),
     ...mapGetters(["carName"]),
+    isFirst() {
+      return this.arithmetic == "deductFirst";
+    },
     deductTotal() {
-      let summaryData = this.dealedData.commonData.summaryData,
-        afterDeduction = summaryData.afterDeduction
-          ? this.isFixed
-            ? summaryData.afterDeduction.fixedData
-            : summaryData.afterDeduction
-          : {},
+      let summaryData = this.dealedData.commonData.summaryData;
+      let totalDeduction = this.isFirst
+        ? (summaryData.deductionFirst || {}).endDeduction || {}
+        : (summaryData.deductionLast || {}).afterDeduction || {};
+      let afterDeduction = this.isFixed
+          ? totalDeduction.fixedData
+          : totalDeduction,
         dimensions = ["carName", "10%提成后进账", "10%提成后出账"],
         source = [];
+      console.log(summaryData);
       this.carName.forEach(carname => {
         let car = carname.slice(1),
           value = afterDeduction[car];
@@ -261,6 +266,7 @@ export default {
   activated() {
     this.setPartParam();
   },
+
   methods: {
     formatIncomeData(val, index) {
       if (index < 3) {

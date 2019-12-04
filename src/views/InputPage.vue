@@ -2,7 +2,7 @@
  * @Description: 账单输入页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:26:19
- * @LastEditTime: 2019-09-01 17:11:00
+ * @LastEditTime: 2019-12-04 10:35:42
  * @LastEditors: your name
  -->
 <template>
@@ -51,6 +51,7 @@
               :whichItemShow.sync="whichItemShow"
               :defaultParams="originData"
               :paramsCallback="paramsCallback"
+              :arithmeticCb="arithmeticCbFn"
             />
           </div>
         </el-col>
@@ -97,6 +98,7 @@ export default {
   name: "inputPage",
   data() {
     return {
+      arithmetic: "deductFirst",
       showConfirmModal: false,
       isSave: false,
       showGenModal: false,
@@ -124,7 +126,8 @@ export default {
       "siteHF",
       "curMonLength",
       "searchYear",
-      "searchMonth"
+      "searchMonth",
+      "dealedData"
     ]),
     ...mapGetters(["yearRange", "monthRange"]),
     originData() {
@@ -223,6 +226,12 @@ export default {
       this.showGenModal = true;
     },
 
+    arithmeticCbFn(e) {
+      let val = e.target.value;
+      this.$store.commit("changeArithmetic", val);
+      this.arithmetic = val;
+      this.refreshCurRemain();
+    },
     //其他默认参数设置，失去焦点是的回调函数
     paramsCallback(e, type) {
       let value = parseInt(e.target.value);
@@ -269,6 +278,22 @@ export default {
         month: this.searchMonth
       });
       return this;
+    },
+    refreshCurRemain() {
+      let summaryData = this.dealedData.commonData.summaryData;
+      if (this.arithmetic == "deductFirst" && summaryData.deductionFirst) {
+        this.$set(
+          this.originData,
+          "currentMonthRemain",
+          summaryData.deductionFirst.endDeduction.remain
+        );
+      } else if (this.arithmetic == "deductLast" && summaryData.deductionLast) {
+        this.$set(
+          this.originData,
+          "currentMonthRemain",
+          summaryData.deductionLast.afterDeduction.remain
+        );
+      }
     },
     refreshOriginData(orData) {
       //刷新或重新赋值源数据，已进行双向绑定
@@ -334,7 +359,8 @@ export default {
           if (receiver.status == "ok") {
             let dealedData = comMethods.unEncrypt(receiver.data);
             this.$store.commit("refreshDealedData", dealedData);
-            this.loadingInstance.close();
+            this.refreshCurRemain();
+            this.loadingInstance.close(); //关闭蒙层
           } else {
             this.$store.commit("refreshDealedData", "init");
             console.log("计算数据失败", receiver);

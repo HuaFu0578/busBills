@@ -2,7 +2,7 @@
  * @Description: 最后总结表格
  * @Author: LiuHuaifu
  * @Date: 2019-08-09 12:57:09
- * @LastEditTime: 2019-09-03 15:43:32
+ * @LastEditTime: 2019-12-04 09:12:44
  * @LastEditors: your name
  -->
 <template>
@@ -36,7 +36,12 @@
         </tbody>
         <tfoot>
           <tr v-for="(item,index) in totalAmount" :key="item.head">
-            <th class="page" v-if="index==2" @click="clickFixDigit" title="点击切换精度">{{item.head}}</th>
+            <th
+              class="page"
+              v-if="index==1 || index==2"
+              @click="clickFixDigit"
+              title="点击切换精度"
+            >{{item.head}}</th>
             <th class="page" v-else>{{item.head}}</th>
             <template v-if="index==0">
               <td
@@ -53,7 +58,7 @@
                 :class="appendixData(item,car)==''?'':appendixData(item,car)<0?'minus':'plus'"
                 v-for="car in bodyConfig.carNum"
                 :key="'final'+item.head+car"
-              >{{appendixData(item,car)}}</td>
+              >{{isFixed?fixedData(item,car): appendixData(item,car)}}</td>
               <td
                 class="remain beforeDeduction"
                 :class="isNaN(parseInt(item.content.lastMonthRemain)) ?'':' show-lt'"
@@ -82,19 +87,33 @@ export default {
   },
   computed: {
     ...mapState("FinalTable", ["isFixed"]),
+    ...mapState(["arithmetic"]),
+    isFirst() {
+      //是否使用第一种算法
+      return this.arithmetic == "deductFirst";
+    },
     totalAmount() {
+      let isFirst = this.isFirst;
+      let deductionFirst = this.bodyConfig.deductionFirst || {},
+        deductionLast = this.bodyConfig.deductionLast || {};
       return [
         {
           head: "进出总数",
           content: this.bodyConfig.totalInOut || {}
         },
         {
-          head: "提成前总数",
-          content: this.bodyConfig.beforeDeduction || {}
+          head: isFirst ? "10%提成总数" : "提成前总数",
+          content:
+            (isFirst
+              ? deductionFirst.afterDeduction
+              : deductionLast.beforeDeduction) || {}
         },
         {
-          head: "10%提成总数",
-          content: this.bodyConfig.afterDeduction || {}
+          head: isFirst ? "最终合计总数" : "10%提成总数",
+          content:
+            (isFirst
+              ? deductionFirst.endDeduction
+              : deductionLast.afterDeduction) || {}
         }
       ];
     },
@@ -225,7 +244,8 @@ export default {
         height: 6vh;
         min-height: 30px;
 
-        &:last-of-type th {
+        &:last-of-type th,
+        &:nth-last-of-type(2) {
           cursor: pointer;
         }
       }

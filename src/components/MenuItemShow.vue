@@ -2,8 +2,8 @@
  * @Description: 菜单项展示
  * @Author: LiuHuaifu
  * @Date: 2019-08-07 08:05:48
- * @LastEditTime: 2019-08-13 07:39:14
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-12-04 10:01:09
+ * @LastEditors: your name
  -->
 <template>
   <div class="wrapper" @mouseenter="itemShowEnter" @mouseleave="itemShowLeave">
@@ -53,20 +53,49 @@
           <span>元</span>
         </div>
       </div>
+      <div class="arithmetic">
+        <div class="m1">
+          <label for="arithmetic-1">先折扣</label>
+          <input
+            type="radio"
+            id="arithmetic-1"
+            name="arithmetic"
+            value="deductFirst"
+            @change="arithmeticCb($event)"
+            :checked="arithmetic=='deductFirst'"
+          />
+        </div>
+        <div class="m2">
+          <label for="arithmetic-2">后折扣</label>
+          <input
+            type="radio"
+            id="arithmetic-2"
+            name="arithmetic"
+            value="deductLast"
+            @change="arithmeticCb($event)"
+            :checked="arithmetic=='deductLast'"
+          />
+        </div>
+      </div>
     </template>
     <template v-else-if="type=='printer'"></template>
     <template v-else-if="type=='output'"></template>
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState(["arithmetic"])
+  },
   props: [
     "type",
     "defaultParams",
     "itemShowEnter",
     "itemShowLeave",
-    "paramsCallback"
-  ]
+    "paramsCallback",
+    "arithmeticCb"
+  ],
 };
 </script>
 <style lang="less" scoped>
@@ -125,6 +154,25 @@ export default {
   }
   #cur_remain {
     background-color: rgb(205, 222, 250);
+  }
+
+  .arithmetic {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 3rem;
+    background-color: #b2fca8;
+    justify-content: space-evenly;
+
+    .m1,
+    .m2 {
+      display: flex;
+      align-items: center;
+
+      input {
+        margin-left: 5px;
+      }
+    }
   }
 }
 </style>

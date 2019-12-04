@@ -2,7 +2,7 @@
  * @Description: 设置菜单
  * @Author: LiuHuaifu
  * @Date: 2019-08-06 15:19:36
- * @LastEditTime: 2019-09-01 11:21:05
+ * @LastEditTime: 2019-12-03 22:31:06
  * @LastEditors: your name
  -->
 <template>
@@ -26,6 +26,7 @@
         :itemShowEnter="itemShowEnter"
         :itemShowLeave="itemShowLeave"
         :paramsCallback="paramsCallback"
+        :arithmeticCb="arithmeticCb"
       />
     </button>
   </div>
@@ -37,7 +38,8 @@ export default {
     "whichItemShow",
     "defaultParams",
     "showTitle",
-    "paramsCallback"
+    "paramsCallback",
+    "arithmeticCb"
   ],
   components: {
     itemShow: () => import("../components/MenuItemShow")
