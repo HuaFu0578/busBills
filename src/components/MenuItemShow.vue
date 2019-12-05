@@ -2,7 +2,7 @@
  * @Description: 菜单项展示
  * @Author: LiuHuaifu
  * @Date: 2019-08-07 08:05:48
- * @LastEditTime: 2019-12-04 10:01:09
+ * @LastEditTime: 2019-12-05 14:15:54
  * @LastEditors: your name
  -->
 <template>
@@ -40,6 +40,12 @@
             @blur="paramsCallback($event,'lastMonthRemain')"
           />
           <span>元</span>
+          <input
+            @click="paramsCallback($event,'addRemain')"
+            type="checkbox"
+            class="add-remain"
+            :checked="addRemain"
+          />
         </div>
         <div class="remain">
           <label class="label" for="cur_remain">本月余额：</label>
@@ -51,6 +57,7 @@
             disabled
           />
           <span>元</span>
+          <div class="add-remain"></div>
         </div>
       </div>
       <div class="arithmetic">
@@ -86,7 +93,7 @@
 import { mapState } from "vuex";
 export default {
   computed: {
-    ...mapState(["arithmetic"])
+    ...mapState(["arithmetic", "addRemain"])
   },
   props: [
     "type",
@@ -95,7 +102,7 @@ export default {
     "itemShowLeave",
     "paramsCallback",
     "arithmeticCb"
-  ],
+  ]
 };
 </script>
 <style lang="less" scoped>
@@ -133,6 +140,13 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .add-remain {
+      width: 20px;
+      height: 20px;
+      margin-left: 10px;
+      display: inline-block;
+    }
   }
   .oil-fee,
   .remain-fee {

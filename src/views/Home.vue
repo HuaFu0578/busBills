@@ -2,7 +2,7 @@
  * @Description: 主页面
  * @Author: LiuHuaiFu
  * @Date: 2019-08-08 08:01:20
- * @LastEditTime: 2019-09-01 09:06:00
+ * @LastEditTime: 2019-12-05 16:10:06
  * @LastEditors: your name
  -->
 <template>
@@ -11,9 +11,9 @@
       <aside-menu></aside-menu>
     </el-aside>
     <el-main class="content-show">
-      <keep-alive exclude="tridayTable">
+      <!-- <keep-alive exclude="tridayTable"> -->
         <router-view />
-      </keep-alive>
+      <!-- </keep-alive> -->
     </el-main>
     <navigate-bar class="nav-bar" />
   </el-container>

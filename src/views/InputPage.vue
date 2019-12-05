@@ -2,7 +2,7 @@
  * @Description: 账单输入页面
  * @Author: LiuHuaifu
  * @Date: 2019-08-03 08:26:19
- * @LastEditTime: 2019-12-04 10:35:42
+ * @LastEditTime: 2019-12-05 16:11:28
  * @LastEditors: your name
  -->
 <template>
@@ -99,6 +99,7 @@ export default {
   data() {
     return {
       arithmetic: "deductFirst",
+      correctLMR: "",
       showConfirmModal: false,
       isSave: false,
       showGenModal: false,
@@ -127,7 +128,8 @@ export default {
       "curMonLength",
       "searchYear",
       "searchMonth",
-      "dealedData"
+      "dealedData",
+      "addRemain"
     ]),
     ...mapGetters(["yearRange", "monthRange"]),
     originData() {
@@ -139,6 +141,7 @@ export default {
           mulOilFee: 120,
           lastMonthRemain: "",
           currentMonthRemain: "",
+          deductArithmetic: "deductFirst",
           hasSaved: false
         },
         carObj = {};
@@ -181,10 +184,11 @@ export default {
   },
   methods: {
     clickSave() {
+      //保存数据
       this.confirmRequest((year, month) => {
         this.modalTips = "警告";
         this.modalTipsIcon = require("../assets/warning.png");
-        this.modalMsg = `${year}年${month}月账单数据文件已存在，是否覆盖原数据？`;
+        this.modalMsg = `${year}年${month}月账单数据已存在，是否更新数据？`;
         this.showConfirmModal = true;
         this.confirmCbFn = val => {
           if (val) {
@@ -231,9 +235,14 @@ export default {
       this.$store.commit("changeArithmetic", val);
       this.arithmetic = val;
       this.refreshCurRemain();
+      this.$set(this.originData, "deductArithmetic", val);
     },
     //其他默认参数设置，失去焦点是的回调函数
     paramsCallback(e, type) {
+      if (type == "addRemain") {
+        this.$store.commit("changeAddRemain", e.target.checked);
+      }
+
       let value = parseInt(e.target.value);
       if (isNaN(value)) {
         return;
@@ -262,10 +271,12 @@ export default {
     yearChange(val) {
       this.$store.commit("searchYear", val);
       this.pullData().changeMonLength();
+      this.$store.commit("changeAddRemain", true);
     },
     monthChange(val) {
       this.$store.commit("searchMonth", val);
       this.pullData().changeMonLength();
+      this.$store.commit("changeAddRemain", true);
     },
     dealDayBill(day, car, value) {
       this.originData.hasSaved = false;
@@ -308,10 +319,9 @@ export default {
         site = this.siteHF,
         comMethods = this.comMethods;
       let config = {
-        url: site.hostName + site.setData,
+        url: site.hostName + site.queryData, //查询数据
         method: "GET",
         params: {
-          oper: "origin",
           year,
           month
         }
@@ -334,6 +344,7 @@ export default {
       return this;
     },
     requestData(config) {
+      //请求数据的通用方法
       this.loadingInstance = this.$loading(this.loadingOptions);
       if (config.method === "POST") {
         return this.$ajax.post(config.url, config.data);
@@ -347,7 +358,7 @@ export default {
       let site = this.siteHF,
         comMethods = this.comMethods;
       let config = {
-        url: site.hostName + site.calData,
+        url: site.hostName + site.calData, //计算数据
         method: "POST",
         data: qs.stringify({
           data: comMethods.encrypt(data)
@@ -378,10 +389,9 @@ export default {
         site = this.siteHF,
         comMethods = this.comMethods;
       let config = {
-        url: site.hostName + site.getData,
+        url: site.hostName + site.getData, //获取数据
         method: "GET",
         params: {
-          oper: "origin",
           year,
           month
         }
@@ -389,13 +399,14 @@ export default {
       this.requestData(config).then(
         res => {
           let receiver = res.data;
-          if (receiver.status == "ok") {
-            let orData = comMethods.unEncrypt(receiver.data);
+          if (receiver.status == "ok" && receiver.data.length > 0) {
+            let orData = comMethods.unEncrypt(
+              JSON.parse(receiver.data[0].bills)
+            );
             this.refreshOriginData(orData).calculateData(orData);
           } else {
             //获取文件数据失败，文件不存在或其他原因
             this.$store.commit("refreshDealedData", "init");
-            console.log(receiver);
           }
           this.loadingInstance.close();
         },
@@ -416,7 +427,10 @@ export default {
         url: site.hostName + site.setData,
         method: "POST",
         data: qs.stringify({
-          data: comMethods.encrypt(this.originData)
+          data: comMethods.encrypt(this.originData),
+          year,
+          month,
+          addRemain: this.addRemain
         })
       };
       this.requestData(config).then(
