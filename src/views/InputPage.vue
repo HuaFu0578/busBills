@@ -27,62 +27,28 @@
         </el-col>
         <el-col :span="12">
           <div class="header-title w100 h100">
-            <drop-select
-              name="input_year"
-              id="input_year"
-              :value-arr="yearRange"
-              :search="searchYear"
-              @searchChange="yearChange"
-            ></drop-select>年
-            <drop-select
-              name="input_month"
-              id="input_month"
-              :value-arr="monthRange"
-              :search="searchMonth"
-              @searchChange="monthChange"
-            ></drop-select>月账单输入
+            <drop-select name="input_year" id="input_year" :value-arr="yearRange" :search="searchYear"
+              @searchChange="yearChange"></drop-select>年
+            <drop-select name="input_month" id="input_month" :value-arr="monthRange" :search="searchMonth"
+              @searchChange="monthChange"></drop-select>月账单输入
           </div>
         </el-col>
         <el-col :span="6">
           <div class="setting-menu">
-            <setting-menu
-              :menuItems="menuItems"
-              :showTitle.sync="showTitle"
-              :whichItemShow.sync="whichItemShow"
-              :defaultParams="originData"
-              :paramsCallback="paramsCallback"
-              :arithmeticCb="arithmeticCbFn"
-            />
+            <setting-menu :menuItems="menuItems" :showTitle.sync="showTitle" :whichItemShow.sync="whichItemShow"
+              :defaultParams="originData" :paramsCallback="paramsCallback" :arithmeticCb="arithmeticCbFn" />
           </div>
         </el-col>
       </el-row>
     </el-header>
     <el-main class="main pop-relative">
-      <input-table
-        class="table-area"
-        :sendOriginData="JSON.stringify(originData)"
-        @dealDayBill="dealDayBill"
-        :curMonLength="curMonLength"
-        v-print="isPrint"
-        :isPrint="isPrint"
-      />
-      <pop-dialog
-        v-if="showConfirmModal"
-        type="confirmModal"
-        :msg="modalMsg"
-        :tips="modalTips"
-        :tipsIcon="modalTipsIcon"
-        :confirmCbFn="confirmCbFn"
-      />
+      <input-table class="table-area" :sendOriginData="JSON.stringify(originData)" @dealDayBill="dealDayBill"
+        :curMonLength="curMonLength" v-print="isPrint" :isPrint="isPrint" />
+      <pop-dialog v-if="showConfirmModal" type="confirmModal" :msg="modalMsg" :tips="modalTips"
+        :tipsIcon="modalTipsIcon" :confirmCbFn="confirmCbFn" />
       <pop-dialog v-if="isSave" type="msgModal" :state="saveState" :autoHidden.sync="isSave" />
-      <pop-dialog
-        v-if="showGenModal"
-        :showGenModal.sync="showGenModal"
-        type="generalModal"
-        :tips="modalTips"
-        :tipsIcon="modalTipsIcon"
-        :msg="modalMsg"
-      />
+      <pop-dialog v-if="showGenModal" :showGenModal.sync="showGenModal" type="generalModal" :tips="modalTips"
+        :tipsIcon="modalTipsIcon" :msg="modalMsg" />
     </el-main>
   </el-container>
 </template>
@@ -132,6 +98,9 @@ export default {
       "addRemain"
     ]),
     ...mapGetters(["yearRange", "monthRange"]),
+    storageName() {
+      return `${this.searchYear}-${this.searchMonth}-UnSaveData`;
+    },
     originData() {
       //初始化原始数据
       this.isClearAll; //只是为了改变isClearAll导致计算属性依赖发生变化，从而强制给计算属性赋默认值
@@ -180,35 +149,24 @@ export default {
     popDialog: () => import("../components/PopDialog")
   },
   created() {
-    this.pullData();
+    this.getStorage()
+      .then(data => this.refreshOriginData(data))
+      .catch(() => this.pullData());
   },
   methods: {
     clickSave() {
       //保存数据
       this.confirmRequest((year, month) => {
-        this.modalTips = "警告";
-        this.modalTipsIcon = require("../assets/warning.png");
-        this.modalMsg = `${year}年${month}月账单数据已存在，是否更新数据？`;
-        this.showConfirmModal = true;
-        this.confirmCbFn = val => {
-          if (val) {
-            this.pushData(this.originData);
-          }
-          this.showConfirmModal = false;
-        };
+        const title = `${year}年${month}月账单数据已存在，是否更新数据？`;
+        return this.confirmModal({ title })
+          .then(() => this.pushData(this.originData))
+          .catch(() => {});
       });
     },
     clearAll() {
-      this.modalTips = "警告";
-      this.modalTipsIcon = require("../assets/warning.png");
-      this.modalMsg = `是否清空当前表格所有数据？`;
-      this.showConfirmModal = true;
-      this.confirmCbFn = val => {
-        if (val) {
-          this.isClearAll = true;
-        }
-        this.showConfirmModal = false;
-      };
+      this.confirmModal({ title: `是否清空当前表格所有数据？` })
+        .then(() => (this.isClearAll = true))
+        .catch(() => {});
     },
     oilFeeFn() {
       this.whichItemShow = "oilFee";
@@ -433,23 +391,62 @@ export default {
           addRemain: this.addRemain
         })
       };
-      this.requestData(config).then(
-        res => {
+      this.setStorage(); //记录缓存
+      this.requestData(config)
+        .then(res => {
           let receiver = res.data;
           if (receiver.status == "ok") {
             this.saveState = "success";
+            this.removeStorage();
           } else {
             this.originData.hasSaved = false; //如果保存失败，则重新更改数据保存状态
             this.saveState = "fail";
+            this.setStorage();
           }
           this.loadingInstance.close();
           this.isSave = true;
-        },
-        err => {
-          console.log(err);
-        }
-      );
+        })
+        .catch(err => console.log(err));
       return this;
+    },
+    /**调起确认弹窗 */
+    confirmModal({
+      name = "警告",
+      ico = require("../assets/warning.png"),
+      title = ""
+    }) {
+      return new Promise((resolve, reject) => {
+        this.modalTips = name;
+        this.modalTipsIcon = ico;
+        this.modalMsg = title;
+        this.showConfirmModal = true;
+        this.confirmCbFn = val => {
+          if (val) resolve();
+          else reject();
+          this.showConfirmModal = false;
+        };
+      });
+    },
+    /**从缓存中获取数据 */
+    getStorage() {
+      const unSaveData = window.localStorage.getItem(this.storageName);
+      if (unSaveData) {
+        const data = JSON.parse(unSaveData);
+        const title = `${this.searchYear}年${this.searchMonth}月账单数据退出时未保存，是否进入重新编辑？`;
+        return this.confirmModal({ title }).then(() => Promise.resolve(data));
+      }
+      return Promise.reject();
+    },
+    /**将数据放入缓存 */
+    setStorage() {
+      window.localStorage.setItem(
+        this.storageName,
+        JSON.stringify(this.originData)
+      );
+    },
+    /**移除缓存 */
+    removeStorage() {
+      window.localStorage.removeItem(this.storageName);
     }
   }
 };
