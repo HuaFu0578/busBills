@@ -151,7 +151,10 @@ export default {
   created() {
     this.getStorage()
       .then(data => this.refreshOriginData(data))
-      .catch(() => this.pullData());
+      .catch(() => {
+        this.removeStorage();
+        this.pullData();
+      });
     this.watchUnLoad(this.unLoad);
   },
   methods: {
@@ -461,6 +464,10 @@ export default {
         window.onunload = null;
       };
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    this.doneBeforeExit();
+    next();
   }
 };
 </script>
