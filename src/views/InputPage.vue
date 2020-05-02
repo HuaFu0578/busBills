@@ -152,6 +152,7 @@ export default {
     this.getStorage()
       .then(data => this.refreshOriginData(data))
       .catch(() => this.pullData());
+    this.watchUnLoad(this.unLoad);
   },
   methods: {
     clickSave() {
@@ -187,7 +188,6 @@ export default {
       this.modalMsg = "导出功能正在快马加鞭建设中，请耐心等待......";
       this.showGenModal = true;
     },
-
     arithmeticCbFn(e) {
       let val = e.target.value;
       this.$store.commit("changeArithmetic", val);
@@ -225,7 +225,6 @@ export default {
       }
       this.calculateData(this.originData);
     },
-
     yearChange(val) {
       this.$store.commit("searchYear", val);
       this.pullData().changeMonLength();
@@ -431,6 +430,9 @@ export default {
     getStorage() {
       const unSaveData = window.localStorage.getItem(this.storageName);
       if (unSaveData) {
+        if (unSaveData == JSON.stringify(this.originData)) {
+          return Promise.resolve(this.originData);
+        }
         const data = JSON.parse(unSaveData);
         const title = `${this.searchYear}年${this.searchMonth}月账单数据退出时未保存，是否进入重新编辑？`;
         return this.confirmModal({ title }).then(() => Promise.resolve(data));
@@ -447,6 +449,17 @@ export default {
     /**移除缓存 */
     removeStorage() {
       window.localStorage.removeItem(this.storageName);
+    },
+    doneBeforeExit() {
+      if (!this.originData.hasSaved) {
+        this.setStorage();
+      }
+    },
+    watchUnLoad() {
+      window.onunload = () => {
+        this.doneBeforeExit();
+        window.onunload = null;
+      };
     }
   }
 };
